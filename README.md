@@ -1,6 +1,6 @@
 # medicamina
 
-ℹ️ The medicamina database and API
+The medicamina database and API
 
 ##  Supabase Docker
 
