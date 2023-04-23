@@ -13,5 +13,5 @@ This is a minimal Docker Compose setup for self-hosting Supabase. Follow the ste
 <br />
 
 <div align="center">
-  <a href="https://supabase.com"><img src="https://raw.githubusercontent.com/medicamina/medicamina/main/assets/github/supabase.png" width="270" /></a>
+  <a href="https://supabase.com"><img src="https://raw.githubusercontent.com/medicamina/.github/main/assets/supabase.png" width="270" /></a>
 </div>
