@@ -6,6 +6,10 @@ The medicamina database and API
 
 This is a minimal Docker Compose setup for self-hosting Supabase. Follow the steps [here](https://supabase.com/docs/guides/hosting/docker) to get started.
 
+## Documentation
+
+[medicamina documentaton](https://medicamina.github.io)
+
 ## Project 
 
 🔨 Built with these awesome tools
