@@ -10,7 +10,7 @@ Read the [medicamina documentaton](https://docs.medicamina.us/)
 
 Download and run [docker](https://docker.com/)
 
-Edit the `.env.example` and `docker-compose.example.yml` files
+Configure the `.env.example` and `docker-compose.example.yml` files and remove the .example
 
 Start a postgreSQL instance `docker-compose up -d`
 
