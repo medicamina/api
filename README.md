@@ -18,6 +18,8 @@ Download and install [bun](https://bun.sh/)
 
 Install the dependencies `bun install`
 
+View the [prisma documentation](https://bun.sh/guides/ecosystem/prisma)
+ 
 Run the project `bun start`
 
 ## Project 
