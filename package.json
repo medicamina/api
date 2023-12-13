@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "pushDB": "prisma db push",
+    "generateClient": "prisma generate"
+  },
+  "dependencies": {
+    "prisma": "^5.7.0"
+  }
+}

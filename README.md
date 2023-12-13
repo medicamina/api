@@ -2,13 +2,30 @@
 
 The medicamina database and API
 
-##  Supabase Docker
-
-This is a minimal Docker Compose setup for self-hosting Supabase. Follow the steps [here](https://supabase.com/docs/guides/hosting/docker) to get started.
-
 ## Documentation
 
-[medicamina documentaton](https://medicamina.github.io)
+Read the [medicamina documentaton](https://docs.medicamina.us/)
+
+##  Getting started
+
+Download and run [docker](https://docker.com/)
+
+Edit the `.env.example` and `docker-compose.example.yml` files
+
+Start a postgreSQL instance `docker-compose up -d`
+
+Download and install [Node.JS](https://nodejs.org)
+
+Install the node dependencies `npm i`
+
+Run the following commands to generate the prisma client
+
+```bash
+npm run pushDB
+npm run generateClient
+```
+
+Begin the api `dart run`
 
 ## Project 
 
@@ -17,5 +34,5 @@ This is a minimal Docker Compose setup for self-hosting Supabase. Follow the ste
 <br />
 
 <div align="center">
-  <a href="https://supabase.com"><img src="https://raw.githubusercontent.com/medicamina/.github/main/assets/supabase.png" width="270" /></a>
+  <!-- <a href="https://supabase.com"><img src="https://raw.githubusercontent.com/medicamina/.github/main/assets/supabase.png" width="270" /></a> -->
 </div>

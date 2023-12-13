@@ -5,6 +5,7 @@ dist
 .expo
 ._*
 .dart_tool
+examples
 
 ./src/**/*/macos
 ./src/**/*/android
@@ -13,11 +14,28 @@ dist
 ./src/**/*/windows
 ./src/**/*/linux
 
-android
-ios
-linux
-macos
-windows
+/macos
+/android
+/build
+/ios
+/windows
+/linux
+/.firebase
+
+./macos
+./android
+./build
+./ios
+./windows
+./linux
+./.firebase
+
+./src/macos
+./src/android
+./src/build
+./src/ios
+./src/windows
+./src/linux
 
 ./src/ui/macos
 ./src/ui/android
@@ -49,6 +67,10 @@ yarn-debug.log*
 yarn-error.log*
 .flutter-plugins
 .flutter-plugins-dependencies
+docker-compose.yml
+./docker-compose.yml
+*/docker-compose.yml
+**/*/docker-compose.yml
 
 # Secrets
 config.ts
