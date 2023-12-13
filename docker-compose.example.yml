@@ -6,6 +6,6 @@ services:
     volumes:
       - ~/apps/postgres:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=S3cret
-      - POSTGRES_USER=citizix_user
-      - POSTGRES_DB=citizix_db
+      - POSTGRES_PASSWORD=database_password
+      - POSTGRES_USER=database_username
+      - POSTGRES_DB=database_db

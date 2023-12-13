@@ -6,6 +6,7 @@ dist
 ._*
 .dart_tool
 examples
+old
 
 ./src/**/*/macos
 ./src/**/*/android
@@ -71,6 +72,10 @@ docker-compose.yml
 ./docker-compose.yml
 */docker-compose.yml
 **/*/docker-compose.yml
+dmmf.json
+./dmmf.json
+bun.lockb
+./bun.lockb
 
 # Secrets
 config.ts

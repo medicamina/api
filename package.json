@@ -1,9 +1,19 @@
 {
+  "name": "medicamina_api",
+  "module": "./src/index.ts",
+  "type": "module",
   "scripts": {
-    "pushDB": "prisma db push",
-    "generateClient": "prisma generate"
+    "start": "bun --watch ./src/index.ts"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@nbit/bun": "^0.13.2",
+    "@prisma/client": "^5.7.0",
     "prisma": "^5.7.0"
   }
 }

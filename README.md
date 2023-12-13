@@ -14,18 +14,11 @@ Configure the `.env.example` and `docker-compose.example.yml` files and remove t
 
 Start a postgreSQL instance `docker-compose up -d`
 
-Download and install [Node.JS](https://nodejs.org)
+Download and install [bun](https://bun.sh/)
 
-Install the node dependencies `npm i`
+Install the dependencies `bun install`
 
-Run the following commands to generate the prisma client
-
-```bash
-npm run pushDB
-npm run generateClient
-```
-
-Begin the api `dart run`
+Run the project `bun start`
 
 ## Project 
 
