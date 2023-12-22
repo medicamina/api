@@ -6,6 +6,7 @@
     "start": "bun --watch ./src/index.ts"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.5",
     "bun-types": "latest"
   },
   "peerDependencies": {
@@ -14,6 +15,7 @@
   "dependencies": {
     "@nbit/bun": "^0.13.2",
     "@prisma/client": "^5.7.0",
+    "jsonwebtoken": "^9.0.2",
     "prisma": "^5.7.0"
   }
 }
