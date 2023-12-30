@@ -29,5 +29,5 @@ Run the project `bun start`
 <br />
 
 <div align="center">
-  <!-- <a href="https://supabase.com"><img src="https://raw.githubusercontent.com/medicamina/.github/main/assets/supabase.png" width="270" /></a> -->
+  <a href="https://bun.sh"><img src="https://bun.sh/wordmark.svg" width="270" /></a>
 </div>
