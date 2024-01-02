@@ -15,7 +15,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@nbit/bun": "^0.13.2",
+    "@nbit/bun": "sstur/nbit",
     "@prisma/client": "^5.7.0",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.8",

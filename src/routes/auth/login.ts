@@ -5,9 +5,9 @@ import * as jwt from 'jsonwebtoken';
 const prisma = new PrismaClient();
 const { defineRoutes } = createApplication();
 
-export default defineRoutes((app) => [
-  app.post('/auth/login', async (request) => {
-    const {email, password} = await request.json();
+export default defineRoutes((app: any) => [
+  app.post('/auth/login', async (request: any) => {
+    const { email, password } = await request.json();
     if (!email || !password) {
       throw new HttpError(400, "Missing JSON body {email, password}");
     }
@@ -18,7 +18,7 @@ export default defineRoutes((app) => [
       },
     });
 
-    if (user) {
+    if (user && user.password) {
       const isMatch = await Bun.password.verify(password, user.password);
 
       if (isMatch) {

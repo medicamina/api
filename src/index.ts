@@ -5,7 +5,7 @@ import * as jwt from 'jsonwebtoken';
 const prisma = new PrismaClient();
 
 const { attachRoutes } = createApplication({
-  getContext: (request) => ({
+  getContext: (request: any) => ({
     authenticate: async () => {
       const authToken = request.headers.get('Authorization') ?? ''
       const sessionToken: any = jwt.verify(authToken, Bun.env.JWT_SECRET_TOKEN as string);

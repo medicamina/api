@@ -1,22 +1,38 @@
 import { HttpError, createApplication } from '@nbit/bun';
 import { PrismaClient } from "@prisma/client";
 import * as jwt from 'jsonwebtoken';
+import * as nodemailer from 'nodemailer';
 
 const prisma = new PrismaClient();
-
 const { defineRoutes } = createApplication();
 
-export default defineRoutes((app) => [
+const transporter = nodemailer.createTransport({
+  host: Bun.env.SMTP_HOST,
+  port: 465,
+  secure: true,
+  auth: {
+    user: Bun.env.SMTP_USERNAME,
+    pass: Bun.env.SMTP_PASSWORD,
+  },
+});
+
+export default defineRoutes((app: { post: (arg0: string, arg1: (request: any) => Promise<never>) => any; }) => [
   app.post('/auth/register', async (request) => { 
-    const { name, email, password } = await request.json();
-    if (!name || !email || !password) {
-      throw new HttpError(400, "Missing JSON body {name, email, password}");
+    const { email, password } = await request.json();
+    if (!email || !password) {
+      throw new HttpError(400, "Missing JSON body {email, password}");
+    }
+    if (email.length < 8) {
+      throw new HttpError(400, "Email too short")
     }
     if (email.length > 100) {
       throw new HttpError(400, "Email too long")
     }
     if (password.length < 6) {
       throw new HttpError(400, "Password too short");
+    }
+    if (password.length > 100) {
+      throw new HttpError(400, "Password too long");
     }
 
     const validateEmail = (email: string) => {
@@ -32,13 +48,29 @@ export default defineRoutes((app) => [
 
       const user = await prisma.user.create({
         data: {
-          name,
           email,
           password: hashedPassword
         },
+        select: {
+          id: true,
+          email: true
+        }
       });
-  
-      return { auth: jwt.sign(user, Bun.env.JWT_SECRET_TOKEN as string) };
+
+      const mailOptions = {
+        from: 'admin@medicamina.com',
+        to: email,
+        subject: 'Welcome to medicamina',
+        text: `Thanks for signing up`,
+      };
+      
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          throw new HttpError(500, error);
+        }
+        return { auth: jwt.sign(user, Bun.env.JWT_SECRET_TOKEN as string) };
+      });
+
     }
     
     throw new HttpError(400, "Invalid email");
