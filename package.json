@@ -3,10 +3,12 @@
   "module": "./src/index.ts",
   "type": "module",
   "scripts": {
-    "start": "bun --watch ./src/index.ts"
+    "start": "bun --watch ./src/index.ts",
+    "build": "bun build src/index.ts --target bun --compile --outfile medicamina"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.5",
+    "@types/nodemailer": "^6.4.14",
     "bun-types": "latest"
   },
   "peerDependencies": {
@@ -16,6 +18,7 @@
     "@nbit/bun": "^0.13.2",
     "@prisma/client": "^5.7.0",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.8",
     "prisma": "^5.7.0"
   }
 }

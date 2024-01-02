@@ -7,21 +7,49 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL_CLOUD")
 }
 
 model User {
   id    Int     @id @default(autoincrement())
-  email String  @unique
+  email String?  @unique
   password String?
-  name  String?
+  resetToken String?
+  twoFaToken String?
+  firstName  String?
+  lastName  String?
   dob DateTime? // Date of Birth
   dod DateTime? // Date of Death
+  birthCountry String?
+  birthCity String?
+  gender Gender?
   height Float?
   weight Float?
   bloodType String?
-  country String?
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  resetToken String?
+  updatedAt DateTime @updatedAt @default(now())
+  marriages Marriage[]
+  children Children[]
+
+  @@unique([firstName, lastName, dob, birthCountry])
+  @@index([email])
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+model Children {
+  id    Int     @id @default(autoincrement())
+  children User[]
+  year DateTime
+  location String?
+}
+
+model Marriage {
+  id    Int     @id @default(autoincrement())
+  users User[]
+  year DateTime
+  location String?
 }
