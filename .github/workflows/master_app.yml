@@ -13,6 +13,7 @@ env:
   AZURE_WEBAPP_NAME: "medicamina" # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: "." # set this to the path to your web app project, defaults to the repository root
   AZUREAPPSERVICE_PUBLISHPROFILE: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+  ENV_FILE: ${{ secrets.ENV_FILE }}
 
 jobs:
   build-and-deploy:
@@ -25,6 +26,9 @@ jobs:
       - name: bun install, and build
         run: |
           bun install
+          touch .env
+          echo $ENV_FILE >> .env
+          cat .env
           bun run build
       - name: "Deploy to Azure WebApp"
         uses: azure/webapps-deploy@v2
