@@ -8,6 +8,7 @@ dist
 examples
 old
 ./medicamina
+medicamina
 
 ./src/**/*/macos
 ./src/**/*/android
