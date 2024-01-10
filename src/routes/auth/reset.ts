@@ -33,10 +33,14 @@ export default defineRoutes((app: any) => [
         id: true
       }
     });
+  
+    if (!user) {
+      throw new HttpError(400, "Invalid email address");
+    }
 
     if (user) {
       const resetToken = crypto.randomUUID();
-      const updateUser = await prisma.user.update({
+      await prisma.user.update({
         where: {
           email,
         },
@@ -44,9 +48,9 @@ export default defineRoutes((app: any) => [
           resetToken,
         },
       });
-
+      
       const mailOptions = {
-        from: 'admin@medicamina.com',
+        from: 'admin@medicamina.us',
         to: email,
         subject: 'Medicamina password reset',
         text: `https://medicamina.us/auth/reset/${resetToken}`,
@@ -57,11 +61,9 @@ export default defineRoutes((app: any) => [
         if (error) {
           throw new HttpError(500, error);
         }
-        return { status: 200, msg: 'Check your email' };
+        return 'Please check your email';
       });
- 
-    }
 
-    throw new HttpError(400, "Invalid email");
+    }
   }),
 ]);

@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport({
 
 export default defineRoutes((app: { post: (arg0: string, arg1: (request: any) => Promise<never>) => any; }) => [
   app.post('/auth/register', async (request) => { 
-    const { email, password } = await request.json();
+    let { email, password } = await request.json();
     if (!email || !password) {
       throw new HttpError(400, "Missing JSON body {email, password}");
     }
@@ -35,6 +35,8 @@ export default defineRoutes((app: { post: (arg0: string, arg1: (request: any) =>
       throw new HttpError(400, "Password too long");
     }
 
+    email = eamil.toLowerCase();
+
     const validateEmail = (email: string) => {
       return String(email)
         .toLowerCase()
@@ -43,22 +45,29 @@ export default defineRoutes((app: { post: (arg0: string, arg1: (request: any) =>
         );
     };
 
-    if (validateEmail(email)) {
+    if (!validateEmail(email)) {
+      throw new HttpError(400, "Invalid email");
+    } else {
       const hashedPassword = await Bun.password.hash(password);
 
-      const user = await prisma.user.create({
-        data: {
-          email,
-          password: hashedPassword
-        },
-        select: {
-          id: true,
-          email: true
-        }
-      });
+      try {
+        const user = await prisma.user.create({
+          data: {
+            email,
+            password: hashedPassword
+          },
+          select: {
+            id: true,
+            email: true,
+            password: true
+          }
+        });
+      } catch (err) {
+        throw new HttpError(400, 'Email is already in use');
+      }
 
       const mailOptions = {
-        from: 'admin@medicamina.com',
+        from: 'admin@medicamina.us',
         to: email,
         subject: 'Welcome to medicamina',
         text: `Thanks for signing up`,
@@ -70,9 +79,6 @@ export default defineRoutes((app: { post: (arg0: string, arg1: (request: any) =>
         }
         return { auth: jwt.sign(user, Bun.env.JWT_SECRET_TOKEN as string) };
       });
-
     }
-    
-    throw new HttpError(400, "Invalid email");
   }),
 ]);

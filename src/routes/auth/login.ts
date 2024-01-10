@@ -7,15 +7,22 @@ const { defineRoutes } = createApplication();
 
 export default defineRoutes((app: any) => [
   app.post('/auth/login', async (request: any) => {
-    const { email, password } = await request.json();
+    let { email, password } = await request.json();
     if (!email || !password) {
       throw new HttpError(400, "Missing JSON body {email, password}");
     }
+
+    email = email.toLowerCase();
 
     const user = await prisma.user.findUnique({
       where: {
         email,
       },
+      select: {
+        id: true,
+        email: true,
+        password: true
+      }
     });
 
     if (user && user.password) {
