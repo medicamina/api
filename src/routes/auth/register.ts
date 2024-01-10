@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export default defineRoutes((app: { post: (arg0: string, arg1: (request: any) => Promise<never>) => any; }) => [
+export default defineRoutes((app) => [
   app.post('/auth/register', async (request) => { 
     let { email, password } = await request.json();
     if (!email || !password) {
@@ -51,7 +51,7 @@ export default defineRoutes((app: { post: (arg0: string, arg1: (request: any) =>
       const hashedPassword = await Bun.password.hash(password);
 
       try {
-        const user = await prisma.user.create({
+        await prisma.user.create({
           data: {
             email,
             password: hashedPassword
@@ -73,12 +73,16 @@ export default defineRoutes((app: { post: (arg0: string, arg1: (request: any) =>
         text: `Thanks for signing up`,
       };
       
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          throw new HttpError(500, error);
-        }
-        return { auth: jwt.sign(user, Bun.env.JWT_SECRET_TOKEN as string) };
+      return new Promise((resolve, reject) => {
+        transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+            reject(HttpError(500, error));
+          } else {
+            resolve({ auth: jwt.sign(user, Bun.env.JWT_SECRET_TOKEN as string) });
+          }
+        });
       });
+
     }
   }),
 ]);

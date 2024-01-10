@@ -16,9 +16,9 @@ const transporter = nodemailer.createTransport({
 });
 
 export default defineRoutes((app: any) => [
-  app.post('/auth/reset/:token', async (request: any) => {
-    return { status: 200 };
-  }),
+  // app.post('/auth/reset/:token', async (request: any) => {
+  //   return { status: 200 };
+  // }),
   app.post('/auth/reset', async (request: any) => {
     const { email } = await request.json();
     if (!email) {
@@ -33,7 +33,7 @@ export default defineRoutes((app: any) => [
         id: true
       }
     });
-  
+
     if (!user) {
       throw new HttpError(400, "Invalid email address");
     }
@@ -48,7 +48,7 @@ export default defineRoutes((app: any) => [
           resetToken,
         },
       });
-      
+
       const mailOptions = {
         from: 'admin@medicamina.us',
         to: email,
@@ -56,14 +56,16 @@ export default defineRoutes((app: any) => [
         text: `https://medicamina.us/auth/reset/${resetToken}`,
         html: `<a href="https://medicamina.us/auth/reset/${resetToken}">Click here to reset password</a>`
       };
-      
-      transporter.sendMail(mailOptions, function(error, _info){
-        if (error) {
-          throw new HttpError(500, error);
-        }
-        return 'Please check your email';
-      });
 
+      return new Promise((resolve, reject) => {
+        transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+            reject(HttpError(500, error));
+          } else {
+            resolve('Please check your email');
+          }
+        });
+      });
     }
   }),
 ]);
