@@ -58,7 +58,7 @@ export default defineRoutes((app: any) => [
       };
 
       return new Promise((resolve, reject) => {
-        transporter.sendMail(mailOptions, function (error, info) {
+        transporter.sendMail(mailOptions, (error, info) => {
           if (error) {
             reject(HttpError(500, error));
           } else {
