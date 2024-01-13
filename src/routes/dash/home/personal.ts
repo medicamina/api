@@ -6,7 +6,7 @@ const { defineRoutes } = createApplication();
 
 export default defineRoutes((app: any) => [
   app.get('/dash/home/personal', async (request: any) => {
-    const { id, email } = request.authenticate();
+    const { id, email } = await request.authenticate();
     if (!id || !email) {
       throw new HttpError(401, "Unauthenticated");
     }
