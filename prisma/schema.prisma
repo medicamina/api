@@ -18,6 +18,7 @@ model User {
   resetToken String?
   twoFaToken String?
   firstName  String?
+  middleName String?
   lastName  String?
   dob DateTime? // Date of Birth
   dod DateTime? // Date of Death

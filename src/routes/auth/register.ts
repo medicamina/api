@@ -35,7 +35,7 @@ export default defineRoutes((app) => [
       throw new HttpError(400, "Password too long");
     }
 
-    email = eamil.toLowerCase();
+    email = email.toLowerCase();
 
     const validateEmail = (email: string) => {
       return String(email)
@@ -49,9 +49,10 @@ export default defineRoutes((app) => [
       throw new HttpError(400, "Invalid email");
     } else {
       const hashedPassword = await Bun.password.hash(password);
+      let user: any;
 
       try {
-        await prisma.user.create({
+        user = await prisma.user.create({
           data: {
             email,
             password: hashedPassword
@@ -76,7 +77,7 @@ export default defineRoutes((app) => [
       return new Promise((resolve, reject) => {
         transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
-            reject(HttpError(500, error));
+            reject(error);
           } else {
             resolve({ auth: jwt.sign(user, Bun.env.JWT_SECRET_TOKEN as string) });
           }
