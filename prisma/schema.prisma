@@ -14,6 +14,7 @@ datasource db {
 model User {
   id    Int     @id @default(autoincrement())
   email String?  @unique
+  phoneNumber String? @unique
   password String?
   resetToken String?
   twoFaToken String?
@@ -23,6 +24,7 @@ model User {
   dob DateTime? // Date of Birth
   dod DateTime? // Date of Death
   birthCountry String?
+  birthState String?
   birthCity String?
   gender Gender?
   height Float?
@@ -33,11 +35,12 @@ model User {
   marriages Marriage[]
   children Children[]
   bookings Booking[]
-  doctorAccount Doctor[]
-  clinics Clinic[]
+
+  doctorAccount Doctor?
+  administratorAccount Administrator?
 
   @@unique([firstName, lastName, dob, birthCountry])
-  @@index([email])
+  @@index([email, phoneNumber])
 }
 
 enum Gender {
@@ -66,10 +69,10 @@ model Clinic {
   address String?
   name String?
   doctors Doctor[]
-  patients User[]
   speciality Speciality?
   bookings Booking[]
   hours BusinessHour[]
+  administrators Administrator[]
 }
 
 enum Speciality {
@@ -85,8 +88,8 @@ model Booking {
   time DateTime
   clinic Clinic @relation(fields: [clinicId], references: [id])
   clinicId Int
-  doctor Doctor? @relation(fields: [doctorId], references: [id])
-  doctorId Int?
+  doctor Doctor @relation(fields: [doctorId], references: [id])
+  doctorId Int
   patient User @relation(fields: [patientId], references: [id])
   patientId Int
   approved Boolean @default(false)
@@ -96,19 +99,31 @@ model Doctor {
   id Int @id @unique @default(autoincrement())
   clinics Clinic[]
   user User @relation(fields: [userId], references: [id])
-  userId Int
+  userId Int @unique
   speciality Speciality?
   bookings Booking[]
   hours BusinessHour[]
 }
 
-model BusinessHour {
+model Administrator {
+  id Int @id @unique @default(autoincrement())
+  clinic Clinic @relation(fields: [clinicId], references: [id])
+  clinicId Int
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @unique
+} 
+
+model BusinessHour { // Availability
   id Int @id @unique @default(autoincrement())
   day Day?
-  doctor Doctor[]
-  clinic Clinic[]
+  doctor Doctor? @relation(fields: [doctorId], references: [id])
+  doctorId Int? @unique
+  clinic Clinic? @relation(fields: [clinicId], references: [id])
+  clinicId Int? @unique
   startTime Int
   endTime Int
+
+  @@unique([doctorId, day, clinicId])
 }
 
 enum Day {

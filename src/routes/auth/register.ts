@@ -17,10 +17,10 @@ const transporter = nodemailer.createTransport({
 });
 
 export default defineRoutes((app) => [
-  app.post('/auth/register', async (request) => { 
-    let { email, password } = await request.json();
-    if (!email || !password) {
-      throw new HttpError(400, "Missing JSON body {email, password}");
+  app.post('/auth/register', async (request: any) => {
+    let { email, password, phoneNumber } = await request.json();
+    if (!email || !password || !phoneNumber) {
+      throw new HttpError(400, "Missing JSON body {email, password, phoneNumber}");
     }
     if (email.length < 8) {
       throw new HttpError(400, "Email too short")
@@ -49,23 +49,19 @@ export default defineRoutes((app) => [
       throw new HttpError(400, "Invalid email");
     } else {
       const hashedPassword = await Bun.password.hash(password);
-      let user: any;
-
-      try {
-        user = await prisma.user.create({
-          data: {
-            email,
-            password: hashedPassword
-          },
-          select: {
-            id: true,
-            email: true,
-            password: true
-          }
-        });
-      } catch (err) {
-        throw new HttpError(400, 'Email is already in use');
-      }
+      
+      let user = await prisma.user.create({
+        data: {
+          email,
+          password: hashedPassword,
+          phoneNumber
+        },
+        select: {
+          id: true,
+          email: true,
+          password: true
+        }
+      });
 
       const mailOptions = {
         from: 'admin@medicamina.us',
@@ -73,7 +69,7 @@ export default defineRoutes((app) => [
         subject: 'Welcome to medicamina',
         text: `Thanks for signing up`,
       };
-      
+
       return new Promise((resolve, reject) => {
         transporter.sendMail(mailOptions, function (error, info) {
           if (error) {

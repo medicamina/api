@@ -10,10 +10,10 @@ export default defineRoutes((app: any) => [
     if (!id || !email) {
       throw new HttpError(401, "Unauthenticated");
     }
-    const { firstName, middleName, lastName, dob, height, weight, gender } = await request.json();
+    const { firstName, middleName, lastName, dob, height, weight, gender, birthCountry, birthState, birthCity } = await request.json();
 
-    if (!firstName || !lastName || !dob || !height || !weight || !gender) {
-      throw new HttpError(400, "Invalid JSON body, requires {firstName, middleName, lastName, dob, height, weight, gender}");
+    if (!firstName || !lastName || !dob || !height || !weight || !gender || !birthCountry || !birthState || !birthCity) {
+      throw new HttpError(400, "Invalid JSON body, requires {firstName, lastName, dob, height, weight, gender, birthCountry, birthState, birthCity}");
     }
 
     const user = prisma.user.update({
@@ -27,7 +27,10 @@ export default defineRoutes((app: any) => [
         dob: new Date(dob).toISOString(),
         height: Number.parseFloat(height),
         weight: Number.parseFloat(weight),
-        gender
+        gender,
+        birthCity,
+        birthState,
+        birthCountry,
       },
       select: {
         id: true,
