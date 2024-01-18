@@ -6,7 +6,7 @@ name: Build and deploy app to Azure Web App
 on:
   push:
     branches:
-      - master
+      - main
   workflow_dispatch:
 
 env:
