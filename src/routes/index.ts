@@ -8,5 +8,7 @@ export { default as reset } from './auth/reset';
 export { default as map } from './dash/home/map';
 export { default as personal } from './dash/home/personal';
 export { default as table } from './dash/home/table';
+export { default as account } from './dash/settings/account';
+export { default as upgrade } from './dash/settings/upgrade';
 
 //
