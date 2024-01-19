@@ -30,5 +30,35 @@ export default defineRoutes((app: any) => [
 
     return user;
   }),
+  app.post('/dash/settings/account', async (request: any) => {
+    const { id, email } = await request.authenticate();
+    const { firstName, middleName, lastName, dob, phoneNumber, gender, birthCity, birthState, birthCountry } = await request.json();
+    if (!id || !email) {
+      throw new HttpError(401, "Unauthenticated");
+    }
+
+    if (!firstName || !lastName || !dob || !phoneNumber || !gender || !birthCountry || !birthState || !birthCity) {
+      throw new HttpError(400, "Invalid JSON body, requires {firstName, lastName, dob, phoneNumber, gender, birthCountry, birthState, birthCity}");
+    }
+
+    const user = prisma.user.update({
+      where: {
+        id
+      },
+      data: {
+        firstName: firstName || undefined,
+        middleName: middleName || undefined,
+        lastName: lastName || undefined,
+        dob: new Date(dob).toISOString() || undefined,
+        phoneNumber: phoneNumber || undefined,
+        gender: gender || undefined,
+        birthCity: birthCity || undefined,
+        birthState: birthState || undefined,
+        birthCountry: birthCountry || undefined,
+      },
+    });
+
+    return user;
+  }),
 ]);
 
