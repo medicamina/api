@@ -16,14 +16,13 @@ const transporter = nodemailer.createTransport({
 });
 
 export default defineRoutes((app: any) => [
-  // app.post('/auth/reset/:token', async (request: any) => {
-  //   return { status: 200 };
-  // }),
   app.post('/auth/reset', async (request: any) => {
-    const { email } = await request.json();
+    let { email } = await request.json();
     if (!email) {
       throw new HttpError(400, "Missing JSON body {email}");
     }
+
+    email = email.toLowerCase();
 
     const user = await prisma.user.findUnique({
       where: {

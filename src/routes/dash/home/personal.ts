@@ -4,17 +4,34 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 const { defineRoutes } = createApplication();
 
+function toTitleCase(str: string) {
+  return str.replace(
+    /\w\S*/g,
+    function(txt: string) {
+      return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
+    }
+  );
+}
+
 export default defineRoutes((app: any) => [
   app.post('/dash/home/personal', async (request: any) => {
     const { id, email } = await request.authenticate();
     if (!id || !email) {
       throw new HttpError(401, "Unauthenticated");
     }
-    const { firstName, middleName, lastName, dob, height, weight, gender, birthCountry, birthState, birthCity } = await request.json();
+    let { firstName, middleName, lastName, dob, height, weight, gender, birthCountry, birthState, birthCity } = await request.json();
 
     if (!firstName || !lastName || !dob || !height || !weight || !gender || !birthCountry || !birthState || !birthCity) {
       throw new HttpError(400, "Invalid JSON body, requires {firstName, lastName, dob, height, weight, gender, birthCountry, birthState, birthCity}");
     }
+
+    firstName = toTitleCase(firstName);
+    middleName = toTitleCase(middleName);
+    lastName = toTitleCase(lastName);
+    birthCity = toTitleCase(birthCity);
+    birthState = toTitleCase(birthState);
+    birthCountry = toTitleCase(birthCountry);
+    gender = gender.toUpperCase();
 
     const user = prisma.user.update({
       where: {
