@@ -29,7 +29,13 @@ export default defineRoutes((app: any) => [
       const isMatch = await Bun.password.verify(password, user.password);
 
       if (isMatch) {
-        return { auth: jwt.sign(user, Bun.env.JWT_SECRET_TOKEN as string) };
+        return Response.json({ auth: jwt.sign(user, Bun.env.JWT_SECRET_TOKEN as string) }, {
+          headers: {
+            "Access-Control-Allow-Methods": "GET, HEAD, POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Accept",
+            "Access-Control-Allow-Origin": "https://medicamina.us"
+          }
+        });
       }   
     }
 

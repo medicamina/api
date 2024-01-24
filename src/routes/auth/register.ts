@@ -19,8 +19,8 @@ const transporter = nodemailer.createTransport({
 export default defineRoutes((app) => [
   app.post('/auth/register', async (request: any) => {
     let { email, password, phoneNumber } = await request.json();
-    if (!email || !password || !phoneNumber) {
-      throw new HttpError(400, "Missing JSON body {email, password, phoneNumber}");
+    if (!email || !password) {
+      throw new HttpError(400, "Missing JSON body {email, password}");
     }
     if (email.length < 8) {
       throw new HttpError(400, "Email too short")
@@ -54,7 +54,7 @@ export default defineRoutes((app) => [
         data: {
           email,
           password: hashedPassword,
-          phoneNumber
+          phoneNumber: phoneNumber || undefined
         },
         select: {
           id: true,
