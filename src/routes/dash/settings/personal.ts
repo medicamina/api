@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 const { defineRoutes } = createApplication();
 
 export default defineRoutes((app: any) => [
-  app.get('/dash/settings/account', async (request: any) => {
+  app.get('/dash/settings/personal', async (request: any) => {
     const { id, email } = await request.authenticate();
     if (!id || !email) {
       throw new HttpError(401, "Unauthenticated");
@@ -20,7 +20,6 @@ export default defineRoutes((app: any) => [
         middleName: true,
         lastName: true,
         dob: true,
-        phoneNumber: true,
         gender: true,
         birthCity: true,
         birthState: true,
@@ -30,7 +29,7 @@ export default defineRoutes((app: any) => [
 
     return user;
   }),
-  app.post('/dash/settings/account', async (request: any) => {
+  app.post('/dash/settings/personal', async (request: any) => {
     const { id, email } = await request.authenticate();
     const { firstName, middleName, lastName, dob, phoneNumber, gender, birthCity, birthState, birthCountry } = await request.json();
     if (!id || !email) {
@@ -47,14 +46,13 @@ export default defineRoutes((app: any) => [
       },
       data: {
         firstName: firstName || undefined,
-        middleName: middleName || undefined,
+        middleName: middleName,
         lastName: lastName || undefined,
         dob: new Date(dob).toISOString() || undefined,
-        phoneNumber: phoneNumber || undefined,
         gender: gender || undefined,
         birthCity: birthCity || undefined,
         birthState: birthState || undefined,
-        birthCountry: birthCountry || undefined,
+        birthCountry: birthCountry || undefined
       },
     });
 
