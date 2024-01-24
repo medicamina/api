@@ -11,5 +11,7 @@ export { default as table } from './dash/home/table';
 export { default as personalSettings } from './dash/settings/personal';
 export { default as physician } from './dash/settings/physician';
 export { default as password } from './dash/settings/password';
+export { default as phoneNumber } from './dash/settings/phone-number';
+export { default as email } from './dash/settings/email';
 
 //
