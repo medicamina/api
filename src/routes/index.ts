@@ -9,6 +9,7 @@ export { default as map } from './dash/home/map';
 export { default as personalInfo } from './dash/home/personal';
 export { default as table } from './dash/home/table';
 export { default as personalSettings } from './dash/settings/personal';
-export { default as upgrade } from './dash/settings/upgrade';
+export { default as physician } from './dash/settings/physician';
+export { default as password } from './dash/settings/password';
 
 //
