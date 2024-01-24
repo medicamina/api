@@ -33,7 +33,7 @@ export default defineRoutes((app: any) => [
           headers: {
             "Access-Control-Allow-Methods": "GET, HEAD, POST, OPTIONS",
             "Access-Control-Allow-Headers": "Content-Type, Accept",
-            "Access-Control-Allow-Origin": "https://medicamina.us"
+            "Access-Control-Allow-Origin": "*"
           }
         });
       }   
