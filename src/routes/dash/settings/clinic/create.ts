@@ -5,9 +5,9 @@ const prisma = new PrismaClient();
 const { defineRoutes } = createApplication();
 
 function titleCase(str: string) {
- let newStr = str.toLowerCase().split(' ');
+  let newStr = str.toLowerCase().split(' ');
   for (var i = 0; i < str.length; i++) {
-    newStr[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+    newStr[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
   }
   return newStr.join(' ');
 }
@@ -56,7 +56,10 @@ export default defineRoutes((app: any) => [
         ownerId: adminAccount.id,
         administrators: {
           connect: [
-            { userId: adminAccount.id }
+            {
+              id: adminAccount.id,
+              userId: id,
+            }
           ]
         }
       }
