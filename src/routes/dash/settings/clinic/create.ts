@@ -5,11 +5,9 @@ const prisma = new PrismaClient();
 const { defineRoutes } = createApplication();
 
 function titleCase(str: string) {
-  let newStr = str.toLowerCase().split(' ');
-  for (var i = 0; i < str.length; i++) {
-    newStr[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
-  }
-  return newStr.join(' ');
+  return str.toLowerCase().split(' ').map(function(word) {
+    return (word.charAt(0).toUpperCase() + word.slice(1));
+  }).join(' ');
 }
 
 export default defineRoutes((app: any) => [
