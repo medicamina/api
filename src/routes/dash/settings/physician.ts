@@ -16,7 +16,7 @@ export default defineRoutes((app: any) => [
       throw new HttpError(400, "Missing JSON body {speciality}");
     }
 
-    const doctor = prisma.doctor.create({
+    const doctor = await prisma.doctor.create({
       data: {
         userId: id,
         speciality 

@@ -33,7 +33,7 @@ export default defineRoutes((app: any) => [
     birthCountry = toTitleCase(birthCountry);
     gender = gender.toUpperCase();
 
-    const user = prisma.user.update({
+    const user = await prisma.user.update({
       where: {
         id
       },
@@ -63,7 +63,7 @@ export default defineRoutes((app: any) => [
       throw new HttpError(401, "Unauthenticated");
     }
 
-    const user = prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         id
       },

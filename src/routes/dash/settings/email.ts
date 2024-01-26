@@ -24,7 +24,7 @@ export default defineRoutes((app: any) => [
       throw new HttpError(400, "Invalid JSON body, requires {newEmail}");
     }
 
-    const user = prisma.user.update({
+    const user = await prisma.user.update({
       where: {
         id
       },

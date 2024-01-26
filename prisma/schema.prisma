@@ -30,6 +30,7 @@ model User {
   height Float?
   weight Float?
   bloodType String?
+  pictureUrl String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())
   marriages Marriage[]
@@ -67,13 +68,20 @@ model Clinic {
   id Int @id @unique @default(autoincrement())
   longitude Float?
   latitude Float?
-  address String?
-  name String?
+  address String
+  suburb String
+  country String
+  name String
+  owner Administrator @relation("ClinicOwner", fields: [ownerId], references: [id])
+  ownerId Int
   doctors Doctor[]
-  speciality Speciality?
+  speciality Speciality
   bookings Booking[]
   hours BusinessHour[]
   administrators Administrator[]
+  pictureUrl String?
+
+  @@unique([name, address, suburb, country])
 }
 
 enum Speciality {
@@ -108,10 +116,10 @@ model Doctor {
 
 model Administrator {
   id Int @id @unique @default(autoincrement())
-  clinic Clinic @relation(fields: [clinicId], references: [id])
-  clinicId Int
   user   User @relation(fields: [userId], references: [id])
   userId Int  @unique
+  clinics Clinic[]
+  clinicOwner Clinic[] @relation("ClinicOwner")
 } 
 
 model BusinessHour { // Availability

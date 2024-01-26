@@ -11,7 +11,7 @@ export default defineRoutes((app: any) => [
       throw new HttpError(401, "Unauthenticated");
     }
 
-    const user = prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         id
       },
@@ -33,7 +33,7 @@ export default defineRoutes((app: any) => [
       throw new HttpError(400, "Invalid JSON body, requires {newPhoneNumber}");
     }
 
-    const user = prisma.user.update({
+    const user = await prisma.user.update({
       where: {
         id
       },

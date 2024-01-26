@@ -18,7 +18,7 @@ export default defineRoutes((app: any) => [
 
     const hashedPassword = await Bun.password.hash(newPassword);
 
-    const user = prisma.user.update({
+    const user = await prisma.user.update({
       where: {
         id
       },

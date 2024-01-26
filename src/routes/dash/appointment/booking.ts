@@ -11,7 +11,7 @@ export default defineRoutes((app: any) => [
       throw new HttpError(401, "Unauthenticated");
     }
 
-    const clinics = prisma.clinic.findMany({
+    const clinics = await prisma.clinic.findMany({
       take: 10,
       include: {
         hours: true,

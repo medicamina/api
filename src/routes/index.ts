@@ -13,5 +13,6 @@ export { default as physician } from './dash/settings/physician';
 export { default as password } from './dash/settings/password';
 export { default as phoneNumber } from './dash/settings/phone-number';
 export { default as email } from './dash/settings/email';
+export { default as createClinic } from './dash/settings/clinic/create';
 
 //
