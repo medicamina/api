@@ -47,7 +47,7 @@ export default defineRoutes((app: any) => [
         speciality,
         ownerId: adminAccount.id,
         administrators: {
-          create: [
+          connect: [
             { userId: adminAccount.id }
           ]
         }
