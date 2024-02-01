@@ -11,14 +11,6 @@ function titleCase(str: string) {
 }
 
 export default defineRoutes((app: any) => [
-  // app.get('/dash/settings/clinic/create', async (request: any) => {
-  //   const { id, email } = await request.authenticate();
-  //   if (!id || !email) {
-  //     throw new HttpError(401, "Unauthenticated");
-  //   }
-
-  //   return email;
-  // }),
   app.post('/dash/settings/clinic/create', async (request: any) => {
     const { id, email } = await request.authenticate();
     if (!id || !email) {

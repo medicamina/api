@@ -12,7 +12,7 @@ const { attachRoutes } = createApplication({
       if (sessionToken) {
         const user = await prisma.user.findUnique({
           where: {
-            id: sessionToken.id,
+            id: sessionToken.id.toString(),
           },
           select: {
             id: true,

@@ -12,7 +12,7 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
+  id    String     @id @default(uuid())
   email String?  @unique
   phoneNumber String? @unique
   password String?
@@ -51,26 +51,31 @@ enum Gender {
 }
 
 model Children {
-  id    Int     @id @default(autoincrement())
+  id    String     @id @default(uuid())
   children User[]
   year DateTime
   location String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
 }
 
 model Marriage {
-  id    Int     @id @default(autoincrement())
+  id    String     @id @default(uuid())
   users User[]
   year DateTime
   location String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
 }
 
 model Clinic {
-  id Int @id @unique @default(autoincrement())
+  id String @id @unique @default(uuid())
   longitude Float?
   latitude Float?
   address String
   suburb String
   country String
+  joinCode String? @unique @default(uuid())
   name String
   owner Administrator @relation("ClinicOwner", fields: [ownerId], references: [id])
   ownerId Int
@@ -80,6 +85,8 @@ model Clinic {
   hours BusinessHour[]
   administrators Administrator[]
   pictureUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
 
   @@unique([name, address, suburb, country])
 }
@@ -96,30 +103,36 @@ model Booking {
   id Int @id @unique @default(autoincrement())
   time DateTime
   clinic Clinic @relation(fields: [clinicId], references: [id])
-  clinicId Int
+  clinicId String
   doctor Doctor @relation(fields: [doctorId], references: [id])
   doctorId Int
   patient User @relation(fields: [patientId], references: [id])
-  patientId Int
+  patientId String
   approved Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
 }
 
 model Doctor {
   id Int @id @unique @default(autoincrement())
   user User @relation(fields: [userId], references: [id])
-  userId Int @unique
+  userId String @unique
   speciality Speciality?
   clinics Clinic[]
   bookings Booking[]
   hours BusinessHour[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
 }
 
 model Administrator {
   id Int @id @unique @default(autoincrement())
   user   User @relation(fields: [userId], references: [id])
-  userId Int  @unique
+  userId String  @unique
   clinics Clinic[]
   clinicOwner Clinic[] @relation("ClinicOwner")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
 } 
 
 model BusinessHour { // Availability
@@ -128,9 +141,11 @@ model BusinessHour { // Availability
   doctor Doctor? @relation(fields: [doctorId], references: [id])
   doctorId Int? @unique
   clinic Clinic? @relation(fields: [clinicId], references: [id])
-  clinicId Int? @unique
+  clinicId String? @unique
   startTime Int
   endTime Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
 
   @@unique([doctorId, day, clinicId])
 }
