@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 const { defineRoutes } = createApplication();
 
 export default defineRoutes((app: any) => [
-  app.get('/dash/settings/clinic/join', async (request: any) => {
+  app.post('/dash/settings/clinic/join', async (request: any) => {
     const { id, email } = await request.authenticate();
     if (!id || !email) {
       throw new HttpError(401, "Unauthenticated");

@@ -17,14 +17,23 @@ export default defineRoutes((app: any) => [
       }
     });
 
+    const pending = await prisma.clinic.findMany({
+      where: {
+        ownerId: adminAccount?.id,
+        approved: false,
+      }
+    });
+
     const owned = await prisma.clinic.findMany({
       where: {
-        ownerId: adminAccount?.id
+        ownerId: adminAccount?.id,
+        approved: true
       }
     });
 
     const joined = await prisma.clinic.findMany({
       where: {
+        approved: true,
         administrators: {
           some: {
             id: adminAccount?.id
@@ -33,6 +42,6 @@ export default defineRoutes((app: any) => [
       }
     });
 
-    return { owned, joined };
+    return { pending, owned, joined };
   }),
 ]);

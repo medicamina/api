@@ -20,4 +20,5 @@ export { default as email } from './dash/settings/email';
 export { default as createClinic } from './dash/settings/clinic/create';
 export { default as clinic } from './dash/settings/clinic/clinic';
 
-//
+// dash settings appointment
+export { default as appointmentBooking } from './dash/appointment/booking';

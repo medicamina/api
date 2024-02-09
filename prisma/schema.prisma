@@ -70,6 +70,7 @@ model Marriage {
 
 model Clinic {
   id String @id @unique @default(uuid())
+  businessNumber String? @unique
   longitude Float?
   latitude Float?
   address String
@@ -78,17 +79,21 @@ model Clinic {
   joinCode String? @unique @default(uuid())
   name String
   owner Administrator @relation("ClinicOwner", fields: [ownerId], references: [id])
-  ownerId Int
+  ownerId String
   doctors Doctor[]
   speciality Speciality
   bookings Booking[]
   hours BusinessHour[]
   administrators Administrator[]
+  approved Boolean @default(false)
+  approvedAt DateTime?
+  // TODO: approvedBy
   pictureUrl String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())
 
   @@unique([name, address, suburb, country])
+  @@unique([businessNumber, country])
 }
 
 enum Speciality {
@@ -100,12 +105,12 @@ enum Speciality {
 }
 
 model Booking {
-  id Int @id @unique @default(autoincrement())
+  id String @id @unique @default(uuid())
   time DateTime
   clinic Clinic @relation(fields: [clinicId], references: [id])
   clinicId String
   doctor Doctor @relation(fields: [doctorId], references: [id])
-  doctorId Int
+  doctorId String
   patient User @relation(fields: [patientId], references: [id])
   patientId String
   approved Boolean @default(false)
@@ -114,7 +119,7 @@ model Booking {
 }
 
 model Doctor {
-  id Int @id @unique @default(autoincrement())
+  id String @id @unique @default(uuid())
   user User @relation(fields: [userId], references: [id])
   userId String @unique
   speciality Speciality?
@@ -126,7 +131,7 @@ model Doctor {
 }
 
 model Administrator {
-  id Int @id @unique @default(autoincrement())
+  id String @id @unique @default(uuid())
   user   User @relation(fields: [userId], references: [id])
   userId String  @unique
   clinics Clinic[]
@@ -135,11 +140,15 @@ model Administrator {
   updatedAt DateTime @updatedAt @default(now())
 } 
 
+model Staff {
+  id String @id @unique @default(uuid())
+}
+
 model BusinessHour { // Availability
-  id Int @id @unique @default(autoincrement())
+  id String @id @unique @default(uuid())
   day Day?
   doctor Doctor? @relation(fields: [doctorId], references: [id])
-  doctorId Int? @unique
+  doctorId String? @unique
   clinic Clinic? @relation(fields: [clinicId], references: [id])
   clinicId String? @unique
   startTime Int

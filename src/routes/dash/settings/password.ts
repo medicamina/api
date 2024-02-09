@@ -7,16 +7,16 @@ const { defineRoutes } = createApplication();
 export default defineRoutes((app: any) => [
   app.post('/dash/settings/password', async (request: any) => {
     const { id, email } = await request.authenticate();
-    const { newPassword } = await request.json();
+    const { password } = await request.json();
     if (!id || !email) {
       throw new HttpError(401, "Unauthenticated");
     }
 
-    if (!newPassword) {
-      throw new HttpError(400, "Invalid JSON body, requires {newPassword}");
+    if (!password) {
+      throw new HttpError(400, "Invalid JSON body, requires {password}");
     }
 
-    const hashedPassword = await Bun.password.hash(newPassword);
+    const hashedPassword = await Bun.password.hash(password);
 
     const user = await prisma.user.update({
       where: {

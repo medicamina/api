@@ -1,8 +1,14 @@
 import { HttpError, createApplication } from '@nbit/bun';
 import { PrismaClient } from '@prisma/client';
+import NodeGeocoder from 'node-geocoder';
 
 const prisma = new PrismaClient();
 const { defineRoutes } = createApplication();
+
+const geocoder = NodeGeocoder({
+  provider: 'google',
+  apiKey: 'AIzaSyALTekTndRtkxrSuLgpPx4R5NloqJRZbBU'
+});
 
 function titleCase(str: string) {
   return str.toLowerCase().split(' ').map(function(word) {
@@ -17,9 +23,9 @@ export default defineRoutes((app: any) => [
       throw new HttpError(401, "Unauthenticated");
     }
 
-    const { name, address, suburb, country, speciality } = await request.json();
-    if (!name || !address || !suburb || !country || !speciality) {
-      throw new HttpError(400, "Invalid JSON body, requires {name, address, suburb, country, speciality}");
+    const { name, address, suburb, zipcode, country, speciality, businessNumber } = await request.json();
+    if (!name || !address || !suburb || !zipcode || !country || !speciality || !businessNumber) {
+      throw new HttpError(400, "Invalid JSON body, requires {name, address, suburb, zipcode, country, speciality, businessNumber}");
     }
 
     let adminAccount = await prisma.administrator.findUnique({
@@ -36,14 +42,28 @@ export default defineRoutes((app: any) => [
       });
     }
 
+    const geocoding = await geocoder.geocode({
+      address: address,
+      country: country,
+      zipcode: zipcode,
+    });
+
+    if (!geocoding.length) {
+      throw new HttpError(400, 'Invalid address');
+    }
+
     const clinic = await prisma.clinic.create({
       data: {
         name: titleCase(name),
         address: titleCase(address),
         suburb: titleCase(suburb),
         country: titleCase(country),
+        latitude: geocoding[0].latitude,
+        longitude: geocoding[0].longitude,
+        businessNumber: businessNumber,
         speciality,
         ownerId: adminAccount.id,
+        approved: false,
         administrators: {
           connect: [
             {

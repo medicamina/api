@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.5",
+    "@types/node-geocoder": "^4.2.6",
     "@types/nodemailer": "^6.4.14",
     "bun-types": "latest"
   },
@@ -18,6 +19,7 @@
     "@nbit/bun": "^0.13.4",
     "@prisma/client": "^5.7.0",
     "jsonwebtoken": "^9.0.2",
+    "node-geocoder": "^4.2.0",
     "nodemailer": "^6.9.8",
     "prisma": "^5.7.0"
   }

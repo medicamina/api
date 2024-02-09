@@ -26,7 +26,9 @@ export default defineRoutes((app: any) => [
     }
 
     firstName = toTitleCase(firstName);
-    middleName = toTitleCase(middleName);
+    if (middleName) {
+      middleName = toTitleCase(middleName);
+    }
     lastName = toTitleCase(lastName);
     birthCity = toTitleCase(birthCity);
     birthState = toTitleCase(birthState);

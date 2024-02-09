@@ -13,15 +13,15 @@ export default defineRoutes((app: any) => [
 
     return email;
   }),
-  app.post('/dash/settings/personal', async (request: any) => {
+  app.post('/dash/settings/email', async (request: any) => {
     const { id, email } = await request.authenticate();
     if (!id || !email) {
       throw new HttpError(401, "Unauthenticated");
     }
 
-    const { newEmail } = await request.json();
-    if (!newEmail) {
-      throw new HttpError(400, "Invalid JSON body, requires {newEmail}");
+    const { emailAddress } = await request.json();
+    if (!emailAddress) {
+      throw new HttpError(400, "Invalid JSON body, requires {emailAddress}");
     }
 
     const user = await prisma.user.update({
@@ -29,7 +29,7 @@ export default defineRoutes((app: any) => [
         id
       },
       data: {
-        email: newEmail
+        email: emailAddress
       },
     });
 

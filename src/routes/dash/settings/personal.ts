@@ -31,13 +31,13 @@ export default defineRoutes((app: any) => [
   }),
   app.post('/dash/settings/personal', async (request: any) => {
     const { id, email } = await request.authenticate();
-    const { firstName, middleName, lastName, dob, phoneNumber, gender, birthCity, birthState, birthCountry } = await request.json();
     if (!id || !email) {
       throw new HttpError(401, "Unauthenticated");
     }
-
-    if (!firstName || !lastName || !dob || !phoneNumber || !gender || !birthCountry || !birthState || !birthCity) {
-      throw new HttpError(400, "Invalid JSON body, requires {firstName, lastName, dob, phoneNumber, gender, birthCountry, birthState, birthCity}");
+    
+    const { firstName, middleName, lastName, dob, gender, birthCity, birthState, birthCountry } = await request.json();
+    if (!firstName || !lastName || !dob || !gender || !birthCountry || !birthState || !birthCity) {
+      throw new HttpError(400, "Invalid JSON body, requires {firstName, lastName, dob, gender, birthCountry, birthState, birthCity}");
     }
 
     const user = await prisma.user.update({

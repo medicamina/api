@@ -24,13 +24,13 @@ export default defineRoutes((app: any) => [
   }),
   app.post('/dash/settings/phone-number', async (request: any) => {
     const { id, email } = await request.authenticate();
-    const { newPhoneNumber } = await request.json();
     if (!id || !email) {
       throw new HttpError(401, "Unauthenticated");
     }
-
-    if (!newPhoneNumber) {
-      throw new HttpError(400, "Invalid JSON body, requires {newPhoneNumber}");
+    
+    const { phoneNumber } = await request.json();
+    if (!phoneNumber) {
+      throw new HttpError(400, "Invalid JSON body, requires {phoneNumber}");
     }
 
     const user = await prisma.user.update({
@@ -38,7 +38,7 @@ export default defineRoutes((app: any) => [
         id
       },
       data: {
-        phoneNumber: newPhoneNumber
+        phoneNumber
       },
     });
 

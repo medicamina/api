@@ -5,6 +5,13 @@ import * as jwt from 'jsonwebtoken';
 const prisma = new PrismaClient();
 
 const { attachRoutes } = createApplication({
+  // onRequest: (event) => {
+  //   event.addListener('response', (response) => {
+  //     response.headers.set('Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS');
+  //     response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Accept');
+  //     response.headers.set('Access-Control-Allow-Origin', '*');
+  //   });
+  // },
   getContext: (request: any) => ({
     authenticate: async () => {
       const authToken = request.headers.get('Authorization') ?? ''
