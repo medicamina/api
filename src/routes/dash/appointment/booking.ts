@@ -1,5 +1,6 @@
 import { HttpError, createApplication } from '@nbit/bun';
 import { PrismaClient } from '@prisma/client';
+//
 
 const prisma = new PrismaClient();
 const { defineRoutes } = createApplication();
