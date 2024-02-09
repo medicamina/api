@@ -7,7 +7,7 @@ const { defineRoutes } = createApplication();
 
 const geocoder = NodeGeocoder({
   provider: 'google',
-  apiKey: 'AIzaSyALTekTndRtkxrSuLgpPx4R5NloqJRZbBU'
+  apiKey: Bun.env.GOOGLE_MAP_API_KEY
 });
 
 function titleCase(str: string) {
