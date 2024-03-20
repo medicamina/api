@@ -76,7 +76,8 @@ model Clinic {
   address String
   suburb String
   country String
-  joinCode String? @unique @default(uuid())
+  joinCode String? @unique @default(nanoid(6))
+  phoneNumber String?
   name String
   owner Administrator @relation("ClinicOwner", fields: [ownerId], references: [id])
   ownerId String
@@ -87,7 +88,7 @@ model Clinic {
   administrators Administrator[]
   approved Boolean @default(false)
   approvedAt DateTime?
-  // TODO: approvedBy
+  // TODO: approvedBy StaffAccount
   pictureUrl String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())
@@ -114,6 +115,9 @@ model Booking {
   patient User @relation(fields: [patientId], references: [id])
   patientId String
   approved Boolean @default(false)
+  approvedAt DateTime
+  approvedBy Administrator @relation(fields: [administratorId], references: [id])
+  administratorId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())
 }
@@ -122,10 +126,15 @@ model Doctor {
   id String @id @unique @default(uuid())
   user User @relation(fields: [userId], references: [id])
   userId String @unique
+  name String
+  pictureUrl String?
   speciality Speciality?
   clinics Clinic[]
   bookings Booking[]
   hours BusinessHour[]
+  approved Boolean @default(false)
+  approvedAt DateTime?
+  // TODO: approvedBy StaffAccount
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())
 }
@@ -136,6 +145,7 @@ model Administrator {
   userId String  @unique
   clinics Clinic[]
   clinicOwner Clinic[] @relation("ClinicOwner")
+  bookingsApproved Booking[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())
 } 
@@ -146,17 +156,39 @@ model Staff {
 
 model BusinessHour { // Availability
   id String @id @unique @default(uuid())
-  day Day?
   doctor Doctor? @relation(fields: [doctorId], references: [id])
   doctorId String? @unique
-  clinic Clinic? @relation(fields: [clinicId], references: [id])
-  clinicId String? @unique
-  startTime Int
-  endTime Int
+  clinic Clinic @relation(fields: [clinicId], references: [id])
+  clinicId String
+  isClinic Boolean
+  sundayOpen DateTime
+  sundayClose DateTime
+  sundayOperating Boolean
+  mondayOpen DateTime
+  mondayClose DateTime
+  mondayOperating Boolean
+  tuesdayOpen DateTime
+  tuesdayClose DateTime
+  tuesdayOperating Boolean
+  wednesdayOpen DateTime
+  wednesdayClose DateTime
+  wednesdayOperating Boolean
+  thursdayOpen DateTime
+  thursdayClose DateTime
+  thursdayOperating Boolean
+  fridayOpen DateTime
+  fridayClose DateTime
+  fridayOperating Boolean
+  saturdayOpen DateTime
+  saturdayClose DateTime
+  saturdayOperating Boolean
+
+  consultLength Int?
+
+  callToBook Boolean @default(false)
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())
-
-  @@unique([doctorId, day, clinicId])
 }
 
 enum Day {

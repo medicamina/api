@@ -1,6 +1,5 @@
 import { HttpError, createApplication } from '@nbit/bun';
 import { PrismaClient } from '@prisma/client';
-//
 
 const prisma = new PrismaClient();
 const { defineRoutes } = createApplication();
@@ -21,6 +20,7 @@ export default defineRoutes((app: any) => [
             id,
             latitude,
             longitude,
+            approved,
             (
               6371 *
               acos(
@@ -43,6 +43,8 @@ export default defineRoutes((app: any) => [
           Distances
         WHERE 
           distance < 25
+        AND
+          approved = true
         ORDER BY 
           distance
         LIMIT 20 OFFSET 0;

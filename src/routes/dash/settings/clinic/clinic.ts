@@ -21,6 +21,24 @@ export default defineRoutes((app: any) => [
       where: {
         ownerId: adminAccount?.id,
         approved: false,
+      },
+      select: {
+        id: true,
+        businessNumber: true,
+        longitude: true,
+        latitude: true,
+        address: true,
+        suburb: true,
+        country: true,
+        joinCode: false,
+        name: true,
+        speciality: true,
+        ownerId: true,
+        approved: true,
+        approvedAt: true,
+        pictureUrl: true,
+        createdAt: true,
+        updatedAt: true,
       }
     });
 
