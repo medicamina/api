@@ -11,7 +11,12 @@ export default defineRoutes((app: any) => [
       throw new HttpError(401, "Unauthenticated");
     }
 
-    const { longitude, latitude } = await request.json();
+    const { longitude, latitude } : { longitude: number, latitude: number } = await request.json();
+
+    function sanitizeInput(input: string) {
+      // Escape single quotes by replacing ' with ''
+      return input.replace(/'/g, "''");
+    }
 
     async function findNearestClinic(latitude: number, longitude: number) {
       const clinics = await prisma.$queryRaw`
@@ -76,7 +81,32 @@ export default defineRoutes((app: any) => [
         throw new HttpError(500, error);
       });
   }),
-  app.post('/dash/appointment/booking/:id', async (request: any) => {
-    return { newBooking: true };
+  app.post('/dash/appointment/booking/:clinicId/:doctorId', async (request: any) => {
+    const { id, email } = await request.authenticate();
+    if (!id || !email) {
+      throw new HttpError(401, "Unauthenticated");
+    }
+
+    const clinicId = request.params.clinicId;
+    const doctorId = request.params.doctorId;
+
+    async function getDoctorAppointments(doctorId: string) {
+      const doctor = await prisma.doctor.findUnique({
+        where: {
+          id: doctorId
+        },
+        include: {
+          hours: true,
+          bookings: true
+        }
+      }).catch((error: string | undefined) => {
+        throw new HttpError(500, error);
+      });
+
+      return doctor;
+    }
+
+    return await getDoctorAppointments(doctorId);
+    
   }),
 ]);

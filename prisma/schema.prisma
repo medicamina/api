@@ -148,7 +148,7 @@ model Administrator {
   bookingsApproved Booking[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())
-} 
+}
 
 model Staff {
   id String @id @unique @default(uuid())

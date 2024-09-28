@@ -1,4 +1,4 @@
-import { HttpError, createApplication } from '@nbit/bun';
+import { HttpError, createApplication, Response } from '@nbit/bun';
 import { PrismaClient } from '@prisma/client';
 import NodeGeocoder from 'node-geocoder';
 
@@ -17,6 +17,24 @@ function titleCase(str: string) {
 }
 
 export default defineRoutes((app: any) => [
+  app.get('/dash/settings/clinic/image', (request: any) => {
+    return Response.file('public/index.html');
+  }),
+  app.post('/dash/settings/clinic/image', async (request: any) => { 
+
+    // const { clinicId, image } = await request.json();
+
+    const { profilePicture } = await request.json();
+    // console.log(await request.arrayBuffer());
+
+    // const buffer = await request.arrayBuffer();
+    // const blob = new Blob([buffer], { type: 'image/jpeg' });
+
+    // await Bun.write('./test.jpg', blob);
+
+    return { status: 200 };
+
+  }),
   app.post('/dash/settings/clinic/create', async (request: any) => {
     const { id, email } = await request.authenticate();
     if (!id || !email) {

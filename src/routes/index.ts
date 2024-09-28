@@ -24,6 +24,7 @@ export { default as leaveClinic } from './dash/settings/clinic/leave';
 
 // dash settings appointment
 export { default as appointmentBooking } from './dash/appointment/booking';
+export { default as appointmentDoctor } from './dash/appointment/doctor';
 
 // dash settings physician
 export { default as physician } from './dash/settings/physician/physician';

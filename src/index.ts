@@ -1,10 +1,13 @@
 import { HttpError, createApplication } from '@nbit/bun';
 import { PrismaClient } from "@prisma/client";
 import * as jwt from 'jsonwebtoken';
+import { join } from 'path';
 
 const prisma = new PrismaClient();
 
 const { attachRoutes } = createApplication({
+  root: join(import.meta.dir, '..'),
+  allowStaticFrom: ['public'],
   // onRequest: (event) => {
   //   event.addListener('response', (response) => {
   //     response.headers.set('Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS');
