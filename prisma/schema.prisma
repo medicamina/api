@@ -115,9 +115,11 @@ model Booking {
   patient User @relation(fields: [patientId], references: [id])
   patientId String
   approved Boolean @default(false)
-  approvedAt DateTime
-  approvedBy Administrator @relation(fields: [administratorId], references: [id])
-  administratorId String
+  cancelled Boolean @default(false)
+  cancelledAt DateTime?
+  approvedAt DateTime?
+  approvedBy Administrator? @relation(fields: [administratorId], references: [id])
+  administratorId String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())
 }
@@ -183,7 +185,7 @@ model BusinessHour { // Availability
   saturdayClose DateTime
   saturdayOperating Boolean
 
-  consultLength Int?
+  consultLength Int? @default(15)
 
   callToBook Boolean @default(false)
   

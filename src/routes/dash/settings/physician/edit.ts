@@ -35,6 +35,7 @@ export default defineRoutes((app: any) => [
       saturdayClose,
       saturdayOperating,
       consultLength,
+      callToBook
     } = await request.json();
 
     let doctor = await prisma.doctor.findUnique({
@@ -75,6 +76,7 @@ export default defineRoutes((app: any) => [
         saturdayClose,
         saturdayOperating,
         consultLength,
+        callToBook
       }
     });
 
