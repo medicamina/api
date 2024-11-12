@@ -1,51 +1,64 @@
-import { HttpError, createApplication } from '@nbit/bun';
-import { PrismaClient } from "@prisma/client";
+import express from 'express';
+import path from 'path';
+import cors from 'cors';
 import * as jwt from 'jsonwebtoken';
-import { join } from 'path';
 
-const prisma = new PrismaClient();
+const app = express();
+app.use(express.static(path.join(import.meta.dir, 'public')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+app.use(authenticateToken);
 
-const { attachRoutes } = createApplication({
-  root: join(import.meta.dir, '..'),
-  allowStaticFrom: ['public'],
-  // onRequest: (event) => {
-  //   event.addListener('response', (response) => {
-  //     response.headers.set('Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS');
-  //     response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Accept');
-  //     response.headers.set('Access-Control-Allow-Origin', '*');
-  //   });
-  // },
-  getContext: (request: any) => ({
-    authenticate: async () => {
-      const authToken = request.headers.get('Authorization') ?? ''
-      const sessionToken: any = jwt.verify(authToken, Bun.env.JWT_SECRET_TOKEN as string);
-      if (sessionToken) {
-        const user = await prisma.user.findUnique({
-          where: {
-            id: sessionToken.id.toString(),
-          },
-          select: {
-            id: true,
-            email: true,
-          }
-        });
-        if (user) {
-          const id = user.id;
-          const email = user.email;
-          return { id, email };
-        }
-        throw new HttpError(404, "User account not found");
-      }
-      throw new HttpError(401, "User not authenticated");
+export interface AuthenticatedRequest extends express.Request {
+  user?: any;
+}
+
+function authenticateToken(req: AuthenticatedRequest, res: express.Response, next: express.NextFunction): void {
+  const token = req.headers['authorization'];
+  
+  jwt.verify(token as string, Bun.env.JWT_SECRET_TOKEN as string, (err, user) => {
+    if (err) {
+      req.user = null;
+      next();
     }
-  }),
+
+    req.user = user;
+
+    next();
+  });
+}
+
+import login from './auth/login';
+app.use(login);
+
+import register from './auth/register';
+app.use(register);
+
+import reset from './auth/reset';
+app.use(reset);
+
+import email from './dash/settings/email';
+app.use(email);
+
+import phoneNumber from './dash/settings/phone-number';
+app.use(phoneNumber);
+
+import password from './dash/settings/password';
+app.use(password);
+
+import settingsPersonal from './dash/settings/personal';
+app.use(settingsPersonal);
+
+import homePersonal from './dash/home/personal';
+app.use(homePersonal);
+
+import booking from './dash/appointment/booking';
+app.use(booking);
+
+import doctor from './dash/appointment/doctor';
+app.use(doctor);
+
+app.listen(Bun.env.SERVER_PORT, () => {
+  console.log(`server running http://localhost:${Bun.env.SERVER_PORT}/`);
 });
-
-import * as handlers from './routes';
-
-Bun.serve({
-  port: Bun.env.SERVER_PORT,
-  fetch: attachRoutes(...Object.values(handlers)),
-});
-
-console.log(`server running http://localhost:${Bun.env.SERVER_PORT}/`);

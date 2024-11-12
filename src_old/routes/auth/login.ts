@@ -11,9 +11,9 @@ export default defineRoutes((app: any) => [
     if (!email || !password) {
       throw new HttpError(400, "Missing JSON body {email, password}");
     }
-    
+
     email = email.toLowerCase();
-    
+
     const user = await prisma.user.findUnique({
       where: {
         email,
@@ -24,12 +24,18 @@ export default defineRoutes((app: any) => [
         password: true
       }
     });
-    
+
     if (user && user.password) {
       const isMatch = await Bun.password.verify(password, user.password);
 
       if (isMatch) {
-        return Response.json({ auth: jwt.sign(user, Bun.env.JWT_SECRET_TOKEN as string) });
+        return Response.json({ auth: jwt.sign(user, Bun.env.JWT_SECRET_TOKEN as string) }, {
+          headers: {
+            "Access-Control-Allow-Methods": "GET, HEAD, POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Accept",
+            "Access-Control-Allow-Origin": "*"
+          }
+        });
       }
     }
 
