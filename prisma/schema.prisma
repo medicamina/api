@@ -21,6 +21,7 @@ model User {
   firstName  String?
   middleName String?
   lastName  String?
+  registered Boolean @default(false)
   dob DateTime? // Date of Birth
   dod DateTime? // Date of Death
   birthCountry String?

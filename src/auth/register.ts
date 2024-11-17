@@ -18,11 +18,11 @@ const transporter = nodemailer.createTransport({
 const register = Router();
 
 register.post('/auth/register', async (req: AuthenticatedRequest, res) => {
-  let { id, email } = req.user;
-  if (id || email) {
+  if (req.user) {
     res.status(400).send('Already logged in');
     return;
   }
+
   let registrationEmail = req.body.email;
   const password = req.body.password;
   const phoneNumber = req.body.phoneNumber;
@@ -63,25 +63,51 @@ register.post('/auth/register', async (req: AuthenticatedRequest, res) => {
     return;
   } else {
     const hashedPassword = await Bun.password.hash(password);
+    let user;
 
-    let user = await prisma.user.create({
-      data: {
-        email: registrationEmail,
-        password: hashedPassword,
-        phoneNumber: phoneNumber || undefined
-      },
-      select: {
-        id: true,
-        email: true,
-        password: true
+    try {
+      user = await prisma.user.create({
+        data: {
+          email: registrationEmail,
+          password: hashedPassword,
+          phoneNumber: phoneNumber || undefined,
+          registered: true
+        },
+        select: {
+          id: true,
+          email: true,
+          password: true
+        }
+      });
+    } catch (err: any) {
+      user = await prisma.user.findUnique({
+        where: {
+          email: registrationEmail,
+          registered: false
+        },
+        select: {
+          id: true,
+          email: true
+        }
+      });
+      if (user) {
+        res.status(202).send('User already exists, but not registered');
+        return;
       }
-    });
+
+      if (err.code === "P2002") {
+        res.status(500).send("E-mail already exists.");
+        return;
+      }
+      res.status(500).send(err);
+      return;
+    }
 
     const mailOptions = {
       from: Bun.env.SMTP_USERNAME,
       to: registrationEmail,
       subject: 'Welcome to medicamina',
-      text: `Thanks for signing up`,
+      text: `Welcome to medicamina, ${registrationEmail}!`,
     };
 
     return new Promise((resolve, reject) => {
@@ -94,10 +120,12 @@ register.post('/auth/register', async (req: AuthenticatedRequest, res) => {
       });
     })
       .then((info) => {
-        res.status(200).send({ auth: jwt.sign(user, Bun.env.JWT_SECRET_TOKEN as string), info: info });
+        res.status(200).send({ auth: jwt.sign(user, Bun.env.JWT_SECRET_TOKEN as string) });
+        return;
       })
       .catch((error) => {
         res.status(500).send(`Error sending email: ${error}`);
+        return;
       });
   }
 });

@@ -32,27 +32,37 @@ homePersonal.post('/dash/home/personal', async (req: AuthenticatedRequest, res) 
   birthCountry = toTitleCase(birthCountry);
   gender = gender.toUpperCase();
 
-  const user = await prisma.user.update({
-    where: {
-      id
-    },
-    data: {
-      firstName,
-      middleName,
-      lastName,
-      dob: new Date(dob).toISOString(),
-      height: Number.parseFloat(height),
-      weight: Number.parseFloat(weight),
-      gender,
-      birthCity,
-      birthState,
-      birthCountry,
-    },
-    select: {
-      id: true,
-      email: true
+  try {
+    const user = await prisma.user.update({
+      where: {
+        id
+      },
+      data: {
+        firstName,
+        middleName,
+        lastName,
+        dob: new Date(dob).toISOString(),
+        height: Number.parseFloat(height),
+        weight: Number.parseFloat(weight),
+        gender,
+        birthCity,
+        birthState,
+        birthCountry,
+      },
+      select: {
+        id: true,
+        email: true
+      }
+    });
+  } catch (err: any) {
+    if (err.code === 'P2002') { 
+      res.status(500).send('Account for this user already exists');
+      return;
     }
-  });
+
+    res.status(500).send('Error updating user: ' + err);
+    return;
+  }
 
   res.status(200).send('User updated');
   return;
@@ -64,7 +74,7 @@ homePersonal.get('/dash/home/personal', async (req: AuthenticatedRequest, res) =
     res.status(401).send('Unauthenticated');
     return;
   }
-
+  
   const user = await prisma.user.findUnique({
     where: {
       id
