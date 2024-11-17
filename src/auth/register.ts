@@ -48,7 +48,7 @@ register.post('/auth/register', async (req: AuthenticatedRequest, res) => {
     return;
   }
 
-  registrationEmail = registrationEmail.toLowerCase();
+  registrationEmail = registrationEmail.toLowerCase().trim();
 
   const validateEmail = (registrationEmail: string) => {
     return String(registrationEmail)

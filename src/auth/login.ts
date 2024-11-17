@@ -17,7 +17,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-
 login.post('/auth/login', async (req: AuthenticatedRequest, res) => {
   if (req.user) {
     res.status(400).send('Already logged in');
@@ -30,7 +29,7 @@ login.post('/auth/login', async (req: AuthenticatedRequest, res) => {
     res.status(400).send('Missing JSON body {email, password}');
     return;
   }
-  loginEmail = loginEmail.toLowerCase().strip();
+  loginEmail = loginEmail.toLowerCase().trim();
   let user;
 
   try {
@@ -46,21 +45,21 @@ login.post('/auth/login', async (req: AuthenticatedRequest, res) => {
       }
     });
   } catch (err) {
-    res.status(500).send(err);
+    res.status(500).send('error ' + err);
     return;
   }
 
   if (!user) {
-    res.status(400).send('User account not found with email');
+    res.status(400).send('User account not found with email ' + loginEmail);
     return
   }
-
+  
   if (user && user.password) {
     let isMatch;
     try {
       isMatch = await Bun.password.verify(password, user.password);
     } catch (err) {
-      res.status(500).send(err);
+      res.status(500).send('error: ' + err);
       return;
     }
 
@@ -77,10 +76,11 @@ login.post('/auth/login', async (req: AuthenticatedRequest, res) => {
       return new Promise((resolve, reject) => {
         transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
-            reject(error); // Reject the promise with the error
+            reject(error);
             return;
           }
-          resolve(info); // Resolve the promise with the info object
+          resolve(info);
+          return;
         });
       })
         .then((info) => {
@@ -94,7 +94,7 @@ login.post('/auth/login', async (req: AuthenticatedRequest, res) => {
     }
   }
 
-  res.status(400).send('Invalid login credentials');
+  res.status(400).send('Invalid password');
   return;
 });
 login.get('/auth/login', (req, res) => {
