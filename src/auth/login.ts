@@ -30,7 +30,7 @@ login.post('/auth/login', async (req: AuthenticatedRequest, res) => {
     res.status(400).send('Missing JSON body {email, password}');
     return;
   }
-  loginEmail = loginEmail.toLowerCase();
+  loginEmail = loginEmail.toLowerCase().strip();
   let user;
 
   try {
@@ -50,6 +50,11 @@ login.post('/auth/login', async (req: AuthenticatedRequest, res) => {
     return;
   }
 
+  if (!user) {
+    res.status(400).send('User account not found with email');
+    return
+  }
+
   if (user && user.password) {
     let isMatch;
     try {
@@ -62,7 +67,6 @@ login.post('/auth/login', async (req: AuthenticatedRequest, res) => {
     delete (user as { password?: string }).password;
 
     if (isMatch) {
-
       const mailOptions = {
         from: Bun.env.SMTP_USERNAME,
         to: loginEmail,
