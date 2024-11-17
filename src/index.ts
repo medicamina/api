@@ -21,11 +21,13 @@ function authenticateToken(req: AuthenticatedRequest, res: express.Response, nex
     if (err) {
       req.user = null;
       next();
+      return;
     }
 
     req.user = user;
 
     next();
+    return;
   });
 }
 

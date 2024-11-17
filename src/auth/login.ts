@@ -28,6 +28,7 @@ login.post('/auth/login', async (req, res) => {
     });
   } catch (err) {
     res.status(500).send(err);
+    return;
   }
 
   if (user && user.password) {
@@ -36,6 +37,7 @@ login.post('/auth/login', async (req, res) => {
       isMatch = await Bun.password.verify(password, user.password);
     } catch (err) {
       res.status(500).send(err);
+      return;
     }
 
     delete (user as { password?: string }).password;
