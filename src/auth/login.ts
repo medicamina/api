@@ -7,26 +7,37 @@ const login = Router();
 
 login.post('/auth/login', async (req, res) => {
 	let email = req.body.email;
-	const password = req.body.password;
+	let password = req.body.password;
   if (!email || !password) {
     res.status(400).send('Missing JSON body {email, password}');
     return;
   }
   email = email.toLowerCase();
-  
-  const user = await prisma.user.findUnique({
-    where: {
-      email,
-    },
-    select: {
-      id: true,
-      email: true,
-      password: true
-    }
-  });
+  let user;
+
+  try {
+    user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+      select: {
+        id: true,
+        email: true,
+        password: true
+      }
+    });
+  } catch (err) {
+    res.status(500).send(err);
+  }
 
   if (user && user.password) {
-    const isMatch = await Bun.password.verify(password, user.password);
+    let isMatch;
+    try {
+      isMatch = await Bun.password.verify(password, user.password);
+    } catch (err) {
+      res.status(500).send(err);
+    }
+
     delete (user as { password?: string }).password;
 
     if (isMatch) {

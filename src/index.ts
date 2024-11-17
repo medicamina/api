@@ -16,7 +16,7 @@ export interface AuthenticatedRequest extends express.Request {
 
 function authenticateToken(req: AuthenticatedRequest, res: express.Response, next: express.NextFunction): void {
   const token = req.headers['authorization'];
-  
+
   jwt.verify(token as string, Bun.env.JWT_SECRET_TOKEN as string, (err, user) => {
     if (err) {
       req.user = null;
