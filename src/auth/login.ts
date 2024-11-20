@@ -4,7 +4,6 @@ import * as jwt from 'jsonwebtoken';
 import { AuthenticatedRequest } from '..';
 import * as nodemailer from 'nodemailer';
 
-// hello
 const prisma = new PrismaClient();
 const login = Router();
 
@@ -54,7 +53,7 @@ login.post('/auth/login', async (req: AuthenticatedRequest, res) => {
     res.status(400).send('User account not found with email ' + loginEmail);
     return
   }
-  
+
   if (user && user.password) {
     let isMatch;
     try {

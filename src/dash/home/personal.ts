@@ -75,23 +75,30 @@ homePersonal.get('/dash/home/personal', async (req: AuthenticatedRequest, res) =
     return;
   }
   
-  const user = await prisma.user.findUnique({
-    where: {
-      id
-    },
-    select: {
-      firstName: true,
-      middleName: true,
-      lastName: true,
-      dob: true,
-      bloodType: true,
-      height: true,
-      weight: true,
-      gender: true,
-    }
-  });
+  let user;
+  try {
+    user = await prisma.user.findUnique({
+      where: {
+        id
+      },
+      select: {
+        firstName: true,
+        middleName: true,
+        lastName: true,
+        dob: true,
+        bloodType: true,
+        height: true,
+        weight: true,
+        gender: true,
+      }
+    });
+  } catch (err) {
+    res.status(500).send('Error fetching user: ' + err);
+    return;
+  }
 
   res.status(200).send(user);
+  return;
 });
 
 export default homePersonal;
